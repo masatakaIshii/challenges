@@ -1,16 +1,27 @@
 package fr.ts.challenges.lovematchcalculator;
 
-import java.util.regex.Pattern;
+import fr.ts.challenges.lovematchcalculator.score.GetScoreIfNamesHaveSameLength;
+import fr.ts.challenges.lovematchcalculator.score.NamesScoreGetter;
+
+import java.util.List;
 
 public class Calculator {
+    private final List<NamesScoreGetter> scoreGetters;
+
+    public Calculator() {
+        scoreGetters = List.of(
+                new GetScoreIfNamesHaveSameLength()
+        );
+    }
+
     public Integer calculate(String firstNameStr, String secondNameStr) {
         var result = 0;
         var firstName = new Name(firstNameStr);
         var secondName = new Name(secondNameStr);
 
-        if (firstName.hasSameLengthThan(secondName)) {
-            result += 20;
-        }
+        result += scoreGetters.stream()
+                .reduce(0, (partialResult, scoreGetter) -> partialResult + scoreGetter.getScore(firstName, secondName), Integer::sum);
+
         if (firstName.isFirstNameVowel() && secondName.isFirstNameVowel()) {
             result += 10;
         }
