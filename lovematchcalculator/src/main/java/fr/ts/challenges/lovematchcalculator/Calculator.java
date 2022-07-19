@@ -13,21 +13,21 @@ public class Calculator {
                 new GetScoreIfNamesFirstCharAreVowels(),
                 new GetScoreIfNamesFirstCharAreConsonant(),
                 new GetScoreIfNamesHaveSameNumberVowels(),
-                new GetScoreIfNamesHaveSameNumberConsonants()
+                new GetScoreIfNamesHaveSameNumberConsonants(),
+                new GetScoreWhenBothNamesContainsAtLeastLove()
         );
     }
 
     public Integer calculate(String firstNameStr, String secondNameStr) {
-        var result = 0;
         var firstName = new Name(firstNameStr);
         var secondName = new Name(secondNameStr);
 
-        result += scoreGetters.stream()
-                .reduce(0, (partialResult, scoreGetter) -> partialResult + scoreGetter.getScore(firstName, secondName), Integer::sum);
-
-        if (firstName.containsAtLeastLove() && secondName.containsAtLeastLove()) {
-            result += 7;
-        }
-        return result;
+        return scoreGetters
+                .stream()
+                .reduce(0,
+                        (currentScore, scoreGetter) ->
+                                currentScore + scoreGetter.getScore(firstName, secondName),
+                        Integer::sum
+                );
     }
 }
