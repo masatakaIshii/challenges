@@ -12,7 +12,8 @@ public class Calculator {
                 new GetScoreIfNamesHaveSameLength(),
                 new GetScoreIfNamesFirstCharAreVowels(),
                 new GetScoreIfNamesFirstCharAreConsonant(),
-                new GetScoreIfNamesHaveSameNumberVowels()
+                new GetScoreIfNamesHaveSameNumberVowels(),
+                new GetScoreIfNamesHaveSameNumberConsonants()
         );
     }
 
@@ -24,9 +25,6 @@ public class Calculator {
         result += scoreGetters.stream()
                 .reduce(0, (partialResult, scoreGetter) -> partialResult + scoreGetter.getScore(firstName, secondName), Integer::sum);
 
-        if (firstName.numberOfConsonants() == secondName.numberOfConsonants()) {
-            result += 12;
-        }
         if (firstName.containsAtLeastLove() && secondName.containsAtLeastLove()) {
             result += 7;
         }
