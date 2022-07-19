@@ -1,9 +1,6 @@
 package fr.ts.challenges.lovematchcalculator;
 
-import fr.ts.challenges.lovematchcalculator.score.GetScoreIfNamesFirstCharAreConsonant;
-import fr.ts.challenges.lovematchcalculator.score.GetScoreIfNamesFirstCharAreVowels;
-import fr.ts.challenges.lovematchcalculator.score.GetScoreIfNamesHaveSameLength;
-import fr.ts.challenges.lovematchcalculator.score.NamesScoreGetter;
+import fr.ts.challenges.lovematchcalculator.score.*;
 
 import java.util.List;
 
@@ -14,7 +11,8 @@ public class Calculator {
         scoreGetters = List.of(
                 new GetScoreIfNamesHaveSameLength(),
                 new GetScoreIfNamesFirstCharAreVowels(),
-                new GetScoreIfNamesFirstCharAreConsonant()
+                new GetScoreIfNamesFirstCharAreConsonant(),
+                new GetScoreIfNamesHaveSameNumberVowels()
         );
     }
 
@@ -26,9 +24,6 @@ public class Calculator {
         result += scoreGetters.stream()
                 .reduce(0, (partialResult, scoreGetter) -> partialResult + scoreGetter.getScore(firstName, secondName), Integer::sum);
 
-        if (firstName.numberOfVowels() == secondName.numberOfVowels()) {
-            result += 12;
-        }
         if (firstName.numberOfConsonants() == secondName.numberOfConsonants()) {
             result += 12;
         }
