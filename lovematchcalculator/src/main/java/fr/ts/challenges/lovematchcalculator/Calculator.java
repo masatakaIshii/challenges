@@ -1,31 +1,33 @@
 package fr.ts.challenges.lovematchcalculator;
 
-import java.util.regex.Pattern;
+import fr.ts.challenges.lovematchcalculator.score.*;
+
+import java.util.List;
 
 public class Calculator {
+    private final List<NamesScoreGetter> scoreGetters;
+
+    public Calculator() {
+        scoreGetters = List.of(
+                new GetScoreIfNamesHaveSameLength(),
+                new GetScoreIfNamesFirstCharAreVowels(),
+                new GetScoreIfNamesFirstCharAreConsonant(),
+                new GetScoreIfNamesHaveSameNumberVowels(),
+                new GetScoreIfNamesHaveSameNumberConsonants(),
+                new GetScoreWhenBothNamesContainsAtLeastLove()
+        );
+    }
+
     public Integer calculate(String firstNameStr, String secondNameStr) {
-        var result = 0;
         var firstName = new Name(firstNameStr);
         var secondName = new Name(secondNameStr);
 
-        if (firstName.hasSameLengthThan(secondName)) {
-            result += 20;
-        }
-        if (firstName.isFirstNameVowel() && secondName.isFirstNameVowel()) {
-            result += 10;
-        }
-        if (firstName.isFirstnameConsonant() && secondName.isFirstnameConsonant()) {
-            result += 10;
-        }
-        if (firstName.numberOfVowels() == secondName.numberOfVowels()) {
-            result += 12;
-        }
-        if (firstName.numberOfConsonants() == secondName.numberOfConsonants()) {
-            result += 12;
-        }
-        if (firstName.containsAtLeastLove() && secondName.containsAtLeastLove()) {
-            result += 7;
-        }
-        return result;
+        return scoreGetters
+                .stream()
+                .reduce(0,
+                        (currentScore, scoreGetter) ->
+                                currentScore + scoreGetter.getScore(firstName, secondName),
+                        Integer::sum
+                );
     }
 }
